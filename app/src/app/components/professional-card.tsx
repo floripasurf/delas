@@ -120,7 +120,7 @@ export default function ProfessionalCard({
               loading="lazy"
             />
           ) : (
-            <div className="w-28 h-full sm:w-36 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center min-h-[120px]">
+            <div className="w-28 h-full sm:w-36 bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center min-h-[120px]">
               <span className="text-2xl font-bold text-white/90">
                 {getInitials(pro.name)}
               </span>

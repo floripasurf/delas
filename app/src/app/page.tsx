@@ -14,15 +14,15 @@ const CATEGORIES = {
     { name: "Nail Designer", slug: "nail-designer", icon: "💎" },
     { name: "Penteados & Noivas", slug: "penteados", icon: "👑" },
   ],
-  "Estética & Corpo": [
+  "Estética": [
     { name: "Esteticista", slug: "esteticista", icon: "🌸" },
     { name: "Depilação", slug: "depilacao", icon: "🌿" },
-    { name: "Massagista", slug: "massagista", icon: "🧘‍♀️" },
     { name: "Micropigmentação", slug: "micropigmentacao", icon: "🖊️" },
-    { name: "Drenagem Linfática", slug: "drenagem", icon: "💆‍♀️" },
+    { name: "Remoção de Tatuagem", slug: "remocao-de-tatuagem", icon: "🔬" },
   ],
   "Bem-Estar": [
-    { name: "Remoção de Tatuagem", slug: "remocao-de-tatuagem", icon: "🔬" },
+    { name: "Massagista", slug: "massagista", icon: "🧘‍♀️" },
+    { name: "Drenagem Linfática", slug: "drenagem", icon: "💆‍♀️" },
     { name: "Personal Trainer", slug: "personal-trainer", icon: "💪" },
     { name: "Nutricionista", slug: "nutricionista", icon: "🍎" },
   ],

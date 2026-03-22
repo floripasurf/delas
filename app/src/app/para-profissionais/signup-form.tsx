@@ -13,12 +13,11 @@ const CATEGORY_GROUPS: Record<string, string[]> = {
     "cabeleireira", "manicure", "maquiadora", "sobrancelhas",
     "cilios", "nail-designer", "penteados",
   ],
-  "Estética & Corpo": [
-    "esteticista", "depilacao", "massagista",
-    "micropigmentacao", "drenagem",
+  "Estética": [
+    "esteticista", "depilacao", "micropigmentacao", "remocao-de-tatuagem",
   ],
   "Bem-Estar": [
-    "remocao-de-tatuagem", "personal-trainer", "nutricionista",
+    "massagista", "drenagem", "personal-trainer", "nutricionista",
   ],
 };
 

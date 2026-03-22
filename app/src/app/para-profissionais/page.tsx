@@ -51,12 +51,12 @@ export default function ParaProfissionais() {
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider text-xs">
-                Estética & Corpo
+                Estética
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  "Esteticista", "Depilação", "Massagista",
-                  "Micropigmentação", "Drenagem Linfática",
+                  "Esteticista", "Depilação",
+                  "Micropigmentação", "Remoção de Tatuagem",
                 ].map((s) => (
                   <span key={s} className="text-xs bg-rose-50 text-rose-600 px-2.5 py-1 rounded-full">
                     {s}
@@ -70,7 +70,7 @@ export default function ParaProfissionais() {
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  "Remoção de Tatuagem", "Personal Trainer", "Nutricionista",
+                  "Massagista", "Drenagem Linfática", "Personal Trainer", "Nutricionista",
                 ].map((s) => (
                   <span key={s} className="text-xs bg-rose-50 text-rose-600 px-2.5 py-1 rounded-full">
                     {s}
