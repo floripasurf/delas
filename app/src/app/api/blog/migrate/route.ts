@@ -15,7 +15,7 @@ export async function GET() {
         cover_image_url text,
         category_slug text,
         tags text[] DEFAULT '{}',
-        author text DEFAULT 'Chamei',
+        author text DEFAULT 'Delas',
         published boolean DEFAULT false,
         published_at timestamptz,
         created_at timestamptz DEFAULT now(),

@@ -16,32 +16,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       SELECT title, excerpt FROM blog_posts WHERE slug = ${slug} AND published = true
     `;
 
-    if (rows.length === 0) return { title: "Artigo não encontrado | Chamei" };
+    if (rows.length === 0) return { title: "Artigo não encontrado | Delas Club" };
 
     const post = rows[0];
     return {
-      title: `${post.title} | Blog Chamei`,
+      title: `${post.title} | Blog Delas Club`,
       description: post.excerpt,
       openGraph: {
         title: post.title,
         description: post.excerpt,
-        url: `https://chamei.app/blog/${slug}`,
-        siteName: "Chamei",
+        url: `https://delas.club/blog/${slug}`,
+        siteName: "Delas Club",
         locale: "pt_BR",
         type: "article",
       },
     };
   } catch {
-    return { title: "Blog | Chamei" };
+    return { title: "Blog | Delas Club" };
   }
 }
 
 const categoryLabels: Record<string, string> = {
-  eletricista: "Eletricista",
-  encanador: "Encanador",
-  pintor: "Pintor",
-  diarista: "Diarista",
-  pedreiro: "Pedreiro",
+  cabeleireira: "Cabelo",
+  manicure: "Unhas",
+  maquiadora: "Maquiagem",
+  esteticista: "Estética",
+  depilacao: "Depilação",
+  massagista: "Bem-Estar",
+  sobrancelhas: "Sobrancelhas",
+  cilios: "Cílios",
+  drenagem: "Bem-Estar",
 };
 
 function formatDate(date: string) {
@@ -95,17 +99,17 @@ export default async function BlogPostPage({ params }: Props) {
     description: post.excerpt,
     author: {
       "@type": "Organization",
-      name: post.author || "Chamei",
-      url: "https://chamei.app",
+      name: post.author || "Delas Club",
+      url: "https://delas.club",
     },
     publisher: {
       "@type": "Organization",
-      name: "Chamei",
-      url: "https://chamei.app",
+      name: "Delas Club",
+      url: "https://delas.club",
     },
     datePublished: post.published_at,
     dateModified: post.updated_at,
-    mainEntityOfPage: `https://chamei.app/blog/${slug}`,
+    mainEntityOfPage: `https://delas.club/blog/${slug}`,
     ...(post.cover_image_url ? { image: post.cover_image_url } : {}),
   };
 
@@ -134,7 +138,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Header */}
         <header className="mb-8">
           {post.category_slug && (
-            <span className="inline-block text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full mb-3">
+            <span className="inline-block text-[11px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full mb-3">
               {categoryLabels[post.category_slug] || post.category_slug}
             </span>
           )}
@@ -144,7 +148,7 @@ export default async function BlogPostPage({ params }: Props) {
           </h1>
 
           <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
-            <span>{post.author || "Chamei"}</span>
+            <span>{post.author || "Delas Club"}</span>
             <span>&middot;</span>
             <time>{post.published_at ? formatDate(post.published_at) : ""}</time>
           </div>
@@ -163,22 +167,22 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Article content */}
         <div
-          className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-blue-600 prose-strong:text-gray-900 prose-img:rounded-xl"
+          className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-rose-600 prose-strong:text-gray-900 prose-img:rounded-xl"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
         {/* CTA */}
-        <div className="mt-12 bg-blue-50 rounded-2xl p-8 text-center">
+        <div className="mt-12 bg-rose-50 rounded-2xl p-8 text-center">
           <h3 className="text-xl font-bold text-gray-900 font-display">
-            Precisa de um profissional?
+            Procurando uma profissional de confiança?
           </h3>
           <p className="mt-2 text-gray-600 text-sm">
-            Encontre profissionais avaliados e entre em contato pelo WhatsApp.
-            Grátis.
+            No Delas, mulheres indicam profissionais para outras mulheres.
+            WhatsApp direto. Grátis.
           </p>
           <a
             href="/"
-            className="inline-block mt-4 bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors"
+            className="inline-block mt-4 bg-rose-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-700 transition-colors"
           >
             Encontrar profissional
           </a>
@@ -197,7 +201,7 @@ export default async function BlogPostPage({ params }: Props) {
                   href={`/blog/${r.slug}`}
                   className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <div className="h-32 bg-gradient-to-br from-blue-50 to-blue-100">
+                  <div className="h-32 bg-gradient-to-br from-rose-50 to-rose-100">
                     {r.cover_image_url && (
                       <img
                         src={r.cover_image_url}
@@ -207,7 +211,7 @@ export default async function BlogPostPage({ params }: Props) {
                     )}
                   </div>
                   <div className="p-4">
-                    <h3 className="text-sm font-semibold text-gray-900 font-display group-hover:text-blue-600 transition-colors leading-snug">
+                    <h3 className="text-sm font-semibold text-gray-900 font-display group-hover:text-rose-600 transition-colors leading-snug">
                       {r.title}
                     </h3>
                     <p className="mt-1 text-xs text-gray-400 line-clamp-2">
