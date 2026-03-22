@@ -50,7 +50,7 @@ export default async function Home() {
             Beleza e bem-estar<br />indicados por mulheres
           </h1>
           <p className="text-gray-500 mt-4 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            Profissionais avaliadas de verdade. WhatsApp direto. Sem enrolação.
+            Um clique da profissional perfeita pra você.
           </p>
 
           {/* Search */}
