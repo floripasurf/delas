@@ -60,7 +60,9 @@ export default async function CategoryPage({
       ) r) as top_review
     FROM professionals p
     WHERE p.category_id = ${category.id} AND p.is_active = true
-    ORDER BY p.google_rating DESC NULLS LAST
+    ORDER BY
+      (CASE WHEN p.photo_url IS NOT NULL THEN 0 ELSE 1 END),
+      p.google_rating DESC NULLS LAST
     LIMIT 100
   `) as (Professional & { top_review?: { author_name: string | null; text: string | null; rating: number | null } | null })[];
 
