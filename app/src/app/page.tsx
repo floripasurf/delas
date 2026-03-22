@@ -22,9 +22,9 @@ const CATEGORIES = {
     { name: "Drenagem Linfática", slug: "drenagem", icon: "💆‍♀️" },
   ],
   "Bem-Estar": [
+    { name: "Remoção de Tatuagem", slug: "remocao-de-tatuagem", icon: "🔬" },
     { name: "Personal Trainer", slug: "personal-trainer", icon: "💪" },
     { name: "Nutricionista", slug: "nutricionista", icon: "🍎" },
-    { name: "Fotógrafa", slug: "fotografa", icon: "📸" },
   ],
 };
 
@@ -41,14 +41,16 @@ export default async function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-rose-50 to-white border-b border-rose-100">
+      <section className="bg-gradient-to-b from-rose-50 via-pink-50/30 to-white border-b border-rose-100">
         <div className="max-w-5xl mx-auto px-4 py-14 sm:py-20 text-center">
+          <div className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full mb-5">
+            A comunidade de beleza feita por nós, para nós
+          </div>
           <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">
-            Encontre profissionais de<br />beleza e bem-estar
+            Beleza e bem-estar<br />indicados por mulheres
           </h1>
           <p className="text-gray-500 mt-4 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            O Glow conecta você a profissionais avaliadas por clientes reais.
-            Compare, escolha e chame direto pelo WhatsApp. Grátis.
+            Profissionais avaliadas de verdade. WhatsApp direto. Sem enrolação.
           </p>
 
           {/* Search */}
@@ -65,7 +67,7 @@ export default async function Home() {
             />
             <button
               type="submit"
-              className="px-6 py-3.5 bg-rose-500 text-white rounded-xl font-medium hover:bg-rose-600 transition-colors text-sm shadow-sm"
+              className="px-6 py-3.5 bg-rose-600 text-white rounded-xl font-medium hover:bg-rose-700 transition-colors text-sm shadow-sm"
             >
               Buscar
             </button>
@@ -73,7 +75,7 @@ export default async function Home() {
 
           {totalPros > 0 && (
             <p className="text-xs text-gray-400 mt-3">
-              {totalPros} profissionais cadastradas no Brasil
+              {totalPros} profissionais na comunidade
             </p>
           )}
         </div>
@@ -92,7 +94,7 @@ export default async function Home() {
                   className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 p-4 hover:border-rose-200 hover:shadow-sm transition-all group"
                 >
                   <span className="text-2xl">{cat.icon}</span>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-rose-500 transition-colors">
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
                     {cat.name}
                   </span>
                 </Link>
@@ -111,28 +113,42 @@ export default async function Home() {
             {[
               {
                 step: "1",
-                title: "Escolha a profissional",
-                desc: "Compare avaliações reais de clientes, localização e especialidades.",
+                title: "Encontre sua profissional",
+                desc: "Avaliações reais de outras mulheres. Sem propaganda, sem surpresa.",
               },
               {
                 step: "2",
                 title: "Chame pelo WhatsApp",
-                desc: "Envie mensagem direto pra profissional. Sem cadastro, sem intermediário.",
+                desc: "Um clique e você já está conversando. Sem cadastro, sem app.",
               },
               {
                 step: "3",
                 title: "Pronta!",
-                desc: "Agende seu horário e fique linda. Sem taxa, sem surpresas.",
+                desc: "Agende, fique linda e depois conte pra comunidade como foi.",
               },
             ].map((item) => (
               <div key={item.step} className="bg-white rounded-2xl border border-gray-100 p-5">
-                <div className="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center text-sm font-bold mb-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center text-sm font-bold mb-3">
                   {item.step}
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1 text-sm">{item.title}</h3>
                 <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Community section */}
+        <section className="mb-12">
+          <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl border border-rose-100 p-8 text-center">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Mais que um site. Uma comunidade.
+            </h2>
+            <p className="text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">
+              No Delas, mulheres indicam profissionais para outras mulheres.
+              Aqui não tem propaganda paga — só avaliação real de quem já usou.
+              Quando você encontra uma profissional incrível, compartilha. É assim que a gente se ajuda.
+            </p>
           </div>
         </section>
 
@@ -143,20 +159,20 @@ export default async function Home() {
               <h3 className="font-semibold text-gray-900 mb-2">Para você</h3>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Avaliações reais importadas do Google
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  Profissionais indicadas por outras mulheres
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Profissionais ordenadas por proximidade
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  Avaliações reais — sem fake, sem propaganda
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Contato direto pelo WhatsApp
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  WhatsApp direto, sem intermediário
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  100% gratuito, sem cadastro obrigatório
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  100% gratuito, sem cadastro
                 </li>
               </ul>
             </div>
@@ -164,27 +180,27 @@ export default async function Home() {
               <h3 className="font-semibold text-gray-900 mb-2">Para profissionais</h3>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Cadastro gratuito, sem mensalidade
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  Faça parte de uma comunidade que valoriza seu trabalho
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Receba clientes direto no WhatsApp
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  Receba clientes direto no seu WhatsApp
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
+                  <span className="text-rose-500 mt-0.5">✓</span>
                   Suas avaliações do Google aparecem no perfil
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-rose-400 mt-0.5">✓</span>
-                  Sem concorrência por lead — a cliente escolhe você
+                  <span className="text-rose-500 mt-0.5">✓</span>
+                  Grátis pra sempre. Sem taxa, sem mensalidade.
                 </li>
               </ul>
               <a
                 href="/para-profissionais"
-                className="inline-block mt-4 text-sm font-medium text-rose-500 hover:text-rose-600"
+                className="inline-block mt-4 text-sm font-medium text-rose-600 hover:text-rose-700"
               >
-                Cadastre-se grátis →
+                Quero fazer parte →
               </a>
             </div>
           </div>
@@ -192,21 +208,21 @@ export default async function Home() {
 
         {/* CTA */}
         <section className="mb-8">
-          <div className="bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row items-center gap-6">
+          <div className="bg-gradient-to-r from-rose-600 to-pink-600 rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row items-center gap-6">
             <div className="flex-1 text-white">
               <h2 className="text-xl sm:text-2xl font-bold">
                 Você é profissional de beleza?
               </h2>
               <p className="text-rose-100 mt-2 text-sm leading-relaxed">
-                Cabeleireira, manicure, maquiadora, esteticista ou qualquer serviço de beleza.
-                Cadastre-se grátis e receba clientes pelo WhatsApp.
+                Entre pra comunidade Delas. Milhares de mulheres vão conhecer seu trabalho.
+                Grátis, sem burocracia.
               </p>
             </div>
             <a
               href="/para-profissionais"
-              className="shrink-0 bg-white text-rose-500 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
+              className="shrink-0 bg-white text-rose-600 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
             >
-              Quero receber clientes
+              Quero fazer parte
             </a>
           </div>
         </section>

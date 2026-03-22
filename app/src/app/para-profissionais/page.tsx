@@ -70,7 +70,7 @@ export default function ParaProfissionais() {
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  "Personal Trainer", "Nutricionista", "Fotógrafa",
+                  "Remoção de Tatuagem", "Personal Trainer", "Nutricionista",
                 ].map((s) => (
                   <span key={s} className="text-xs bg-rose-50 text-rose-600 px-2.5 py-1 rounded-full">
                     {s}

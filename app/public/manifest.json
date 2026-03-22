@@ -1,11 +1,11 @@
 {
-  "name": "Glow",
-  "short_name": "Glow",
-  "description": "Encontre profissionais de beleza e bem-estar",
+  "name": "Delas Club",
+  "short_name": "Delas",
+  "description": "Comunidade feminina de beleza e bem-estar",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f9fafb",
-  "theme_color": "#F43F5E",
+  "theme_color": "#E11D48",
   "icons": [
     {
       "src": "/logo.svg",

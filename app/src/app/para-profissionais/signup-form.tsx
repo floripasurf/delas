@@ -18,7 +18,7 @@ const CATEGORY_GROUPS: Record<string, string[]> = {
     "micropigmentacao", "drenagem",
   ],
   "Bem-Estar": [
-    "personal-trainer", "nutricionista", "fotografa",
+    "remocao-de-tatuagem", "personal-trainer", "nutricionista",
   ],
 };
 

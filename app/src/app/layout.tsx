@@ -23,16 +23,17 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Glow — Profissionais de beleza e bem-estar",
+  title: "Delas Club — Beleza e bem-estar indicados por mulheres",
   description:
-    "Encontre cabeleireiras, manicures, maquiadoras, esteticistas e mais profissionais de beleza avaliadas no Brasil. Compare, escolha e chame pelo WhatsApp. Grátis.",
+    "A comunidade feminina de beleza e bem-estar. Profissionais avaliadas por mulheres de verdade. WhatsApp direto. Grátis.",
   keywords:
-    "manicure perto de mim, cabeleireira, maquiadora, esteticista, nail designer, depilação, beleza, bem-estar",
+    "manicure perto de mim, cabeleireira, maquiadora, esteticista, nail designer, depilação, beleza, bem-estar, comunidade feminina",
   openGraph: {
-    title: "Glow — Profissionais de beleza e bem-estar",
+    title: "Delas Club — Beleza indicada por mulheres",
     description:
-      "Encontre profissionais de beleza avaliadas perto de você. Grátis para clientes e profissionais.",
-    siteName: "Glow",
+      "A comunidade feminina de beleza e bem-estar. Profissionais avaliadas de verdade. WhatsApp direto. Grátis.",
+    url: "https://delas.club",
+    siteName: "Delas Club",
     locale: "pt_BR",
     type: "website",
   },
@@ -47,9 +48,9 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#F43F5E" />
+        <meta name="theme-color" content="#E11D48" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="Glow" />
+        <meta name="apple-mobile-web-app-title" content="Delas" />
         <link rel="apple-touch-icon" href="/logo.svg" />
         <script
           type="application/ld+json"
@@ -57,12 +58,13 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Glow",
+              name: "Delas Club",
+              url: "https://delas.club",
               description:
-                "Plataforma gratuita que conecta profissionais de beleza a clientes no Brasil",
+                "Comunidade feminina de beleza e bem-estar. Profissionais avaliadas por mulheres.",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "{url}/buscar?q={search_term_string}",
+                target: "https://delas.club/buscar?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),
@@ -93,9 +95,9 @@ export default function RootLayout({
               </a>
               <a
                 href="/para-profissionais"
-                className="bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-rose-600 transition-colors"
+                className="bg-rose-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors"
               >
-                Cadastre-se grátis
+                Quero fazer parte
               </a>
             </nav>
           </div>
@@ -112,10 +114,11 @@ export default function RootLayout({
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <LogoIcon size={22} />
-                  <span className="font-semibold text-gray-900 text-sm font-display">glow</span>
+                  <span className="font-semibold text-gray-900 text-sm font-display">delas<span className="text-rose-600">.club</span></span>
                 </div>
                 <p className="text-xs text-gray-400 max-w-xs">
-                  Plataforma gratuita que conecta profissionais de beleza a clientes no Brasil.
+                  A comunidade feminina de beleza e bem-estar do Brasil.
+                  Feita por nós, para nós.
                 </p>
               </div>
               <div className="flex gap-8 text-xs text-gray-500">
@@ -127,15 +130,15 @@ export default function RootLayout({
                   <a href="/categoria/esteticista" className="block hover:text-gray-700">Esteticistas</a>
                 </div>
                 <div className="space-y-2">
-                  <p className="font-medium text-gray-700 uppercase tracking-wider text-[10px]">Glow</p>
+                  <p className="font-medium text-gray-700 uppercase tracking-wider text-[10px]">Comunidade</p>
                   <a href="/para-profissionais" className="block hover:text-gray-700">Para Profissionais</a>
-                  <a href="/para-profissionais#cadastro" className="block hover:text-gray-700">Cadastre-se</a>
+                  <a href="/para-profissionais#cadastro" className="block hover:text-gray-700">Fazer parte</a>
                   <a href="/blog" className="block hover:text-gray-700">Blog</a>
                 </div>
               </div>
             </div>
             <div className="border-t border-gray-100 mt-8 pt-6 text-[11px] text-gray-400">
-              Glow — Brasil
+              delas.club — Brasil
             </div>
           </div>
         </footer>

@@ -8,10 +8,10 @@ export function LogoIcon({ size = 28, className = "" }: { size?: number; classNa
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect width="32" height="32" rx="9" fill="#F43F5E" />
-      {/* Sparkle/glow */}
+      <rect width="32" height="32" rx="9" fill="#E11D48" />
+      {/* Heart + sparkle — community & beauty */}
       <path
-        d="M16 7L17.8 13.2L24 15L17.8 16.8L16 23L14.2 16.8L8 15L14.2 13.2L16 7Z"
+        d="M16 25.5C16 25.5 6 19.5 6 13.5C6 10.5 8.5 8 11.5 8C13.3 8 15 9 16 10.5C17 9 18.7 8 20.5 8C23.5 8 26 10.5 26 13.5C26 19.5 16 25.5 16 25.5Z"
         fill="white"
         fillOpacity="0.95"
       />
@@ -24,21 +24,11 @@ export function LogoFull({ className = "" }: { className?: string }) {
     <a href="/" className={`flex items-center gap-2 ${className}`}>
       <LogoIcon size={30} />
       <span
-        className="text-[1.2rem] font-bold tracking-[-0.03em] text-gray-900"
+        className="text-[1.2rem] font-bold tracking-[-0.02em] text-gray-900"
         style={{ fontFamily: "var(--font-brand), sans-serif" }}
       >
-        gl
-        <span className="relative">
-          o
-          <svg
-            className="absolute -top-[2px] left-[3px] w-[5px] h-[5px]"
-            viewBox="0 0 10 10"
-            fill="none"
-          >
-            <circle cx="5" cy="5" r="5" fill="#F43F5E" />
-          </svg>
-        </span>
-        w
+        delas
+        <span className="text-rose-500">.club</span>
       </span>
     </a>
   );
@@ -56,16 +46,16 @@ export function LogoFullWhite({ className = "" }: { className?: string }) {
       >
         <rect width="32" height="32" rx="9" fill="white" fillOpacity="0.15" />
         <path
-          d="M16 7L17.8 13.2L24 15L17.8 16.8L16 23L14.2 16.8L8 15L14.2 13.2L16 7Z"
+          d="M16 25.5C16 25.5 6 19.5 6 13.5C6 10.5 8.5 8 11.5 8C13.3 8 15 9 16 10.5C17 9 18.7 8 20.5 8C23.5 8 26 10.5 26 13.5C26 19.5 16 25.5 16 25.5Z"
           fill="white"
           fillOpacity="0.95"
         />
       </svg>
       <span
-        className="text-[1.2rem] font-bold tracking-[-0.03em] text-white"
+        className="text-[1.2rem] font-bold tracking-[-0.02em] text-white"
         style={{ fontFamily: "var(--font-brand), sans-serif" }}
       >
-        glow
+        delas<span className="text-rose-200">.club</span>
       </span>
     </div>
   );
