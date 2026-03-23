@@ -47,6 +47,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4CEJN3RXNX" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-4CEJN3RXNX');
+            `,
+          }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#E11D48" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
