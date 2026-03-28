@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import ClaimProfile from "./claim-profile";
 
-const PLATFORM_NAME = "Chamei";
+const PLATFORM_NAME = "Delas Club";
 
 function formatDistance(km: number): string {
   if (km < 1) return `${Math.round(km * 1000)}m de você`;
@@ -72,9 +72,9 @@ export default function ContactSidebar({
       <h3 className="font-semibold text-gray-900 mb-4">Entrar em contato</h3>
 
       {distance !== null && (
-        <div className="flex items-center gap-2 mb-4 p-2 bg-blue-50 rounded-lg">
+        <div className="flex items-center gap-2 mb-4 p-2 bg-rose-50 rounded-lg">
           <span>📍</span>
-          <span className="text-sm font-medium text-blue-700">
+          <span className="text-sm font-medium text-rose-700">
             {formatDistance(distance)}
           </span>
         </div>
@@ -110,7 +110,7 @@ export default function ContactSidebar({
 
           <a
             href={`tel:${phone}`}
-            className="block w-full text-center bg-blue-600 text-white rounded-lg py-3 font-medium hover:bg-blue-700 transition-colors mb-3"
+            className="block w-full text-center bg-rose-600 text-white rounded-lg py-3 font-medium hover:bg-rose-700 transition-colors mb-3"
           >
             Ligar
           </a>

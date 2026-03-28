@@ -139,7 +139,7 @@ export default function PhotoUpload({ professionalId }: { professionalId: string
         className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
           uploading
             ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-700"
+            : "bg-rose-600 text-white hover:bg-rose-700"
         }`}
       >
         <input

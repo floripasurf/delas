@@ -3,7 +3,7 @@ import { getDb } from "./db";
 
 export async function getSessionProfessional() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("chamei_session")?.value;
+  const token = cookieStore.get("delas_session")?.value;
   if (!token) return null;
 
   const sql = getDb();

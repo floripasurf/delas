@@ -101,7 +101,7 @@ export default function CityProfessionals() {
   if (cityLoading && !citiesLoaded) {
     return (
       <div className="flex items-center justify-center gap-3 py-8">
-        <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
         <p className="text-gray-400 text-sm">Detectando sua cidade...</p>
       </div>
     );
@@ -115,7 +115,7 @@ export default function CityProfessionals() {
     <section className="mb-10">
       <div className="flex items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
             <span className="text-sm">📍</span>
           </div>
           <div>
@@ -137,7 +137,7 @@ export default function CityProfessionals() {
           <select
             value={selectValue}
             onChange={handleCityChange}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-w-[200px] truncate"
+            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent max-w-[200px] truncate"
           >
             <option value="">
               {detectedCity ? `${detectedCity} (auto)` : "Selecionar cidade"}
@@ -153,7 +153,7 @@ export default function CityProfessionals() {
 
       {loading ? (
         <div className="flex items-center justify-center gap-3 py-8">
-          <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-gray-400 text-sm">Carregando profissionais...</p>
         </div>
       ) : pros.length === 0 ? (

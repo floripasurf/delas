@@ -16,7 +16,7 @@ export async function generateMetadata({
   const category = categories[0];
 
   if (!category) {
-    return { title: "Categoria não encontrada | Chamei" };
+    return { title: "Categoria não encontrada | Delas Club" };
   }
 
   const countRows = await sql`
@@ -25,8 +25,8 @@ export async function generateMetadata({
   `;
   const total = countRows[0]?.total ?? 0;
 
-  const title = `${category.name} | Chamei - Profissionais avaliados`;
-  const description = `Encontre os melhores profissionais de ${category.name.toLowerCase()} no Chamei. ${total} profissionais avaliados prontos para atender você.`;
+  const title = `${category.name} | Delas Club - Profissionais avaliadas`;
+  const description = `Encontre as melhores profissionais de ${category.name.toLowerCase()} no Delas Club. ${total} profissionais avaliadas prontas para atender você.`;
 
   return { title, description };
 }
@@ -46,7 +46,7 @@ export default async function CategoryPage({
     return (
       <div className="max-w-5xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Categoria não encontrada</h1>
-        <Link href="/" className="text-blue-600 mt-4 inline-block">Voltar ao início</Link>
+        <Link href="/" className="text-rose-600 mt-4 inline-block">Voltar ao início</Link>
       </div>
     );
   }
@@ -74,7 +74,7 @@ export default async function CategoryPage({
     itemListElement: pros.map((pro, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `https://chamei.com.br/profissional/${pro.slug}`,
+      url: `https://delas.club/profissional/${pro.slug}`,
       name: pro.name,
     })),
   };
@@ -108,16 +108,16 @@ export default async function CategoryPage({
 
         {/* CTA */}
         <section className="mt-12">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
+          <div className="bg-gradient-to-r from-rose-600 to-pink-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
             <div className="flex-1 text-white">
               <h2 className="text-xl font-bold">Você é {category.name.toLowerCase()}?</h2>
-              <p className="text-blue-100 mt-1 text-sm">
+              <p className="text-rose-100 mt-1 text-sm">
                 Cadastre-se grátis e receba clientes pelo WhatsApp.
               </p>
             </div>
             <a
               href="/para-profissionais"
-              className="shrink-0 bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-colors text-sm"
+              className="shrink-0 bg-white text-rose-600 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
             >
               Quero receber clientes
             </a>

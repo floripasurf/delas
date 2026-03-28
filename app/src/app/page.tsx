@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDb } from "@/lib/db";
 import CityProfessionals from "./components/city-professionals";
+import FeaturedProfessionals from "./components/featured-professionals";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,27 @@ const CATEGORIES = {
   ],
 };
 
+const TESTIMONIALS = [
+  {
+    name: "Camila R.",
+    city: "Florianópolis, SC",
+    text: "Encontrei minha cabeleireira pelo Delas e nunca mais troquei! As avaliações reais fazem toda a diferença.",
+    rating: 5,
+  },
+  {
+    name: "Juliana M.",
+    city: "São Paulo, SP",
+    text: "Amo que posso mandar WhatsApp direto. Sem burocracia, sem app complicado. Simples como tem que ser.",
+    rating: 5,
+  },
+  {
+    name: "Fernanda L.",
+    city: "Curitiba, PR",
+    text: "A melhor coisa é saber que outras mulheres indicaram. Confio muito mais do que em propaganda paga.",
+    rating: 5,
+  },
+];
+
 export default async function Home() {
   const sql = getDb();
 
@@ -37,6 +59,32 @@ export default async function Home() {
       (SELECT count(*) FROM categories) as total_cats
   `;
   const totalPros = stats[0]?.total_pros || 0;
+
+  // Top cities for the selector
+  const topCities = await sql`
+    SELECT city, state, count(*) as total
+    FROM professionals
+    WHERE is_active = true AND city IS NOT NULL
+    GROUP BY city, state
+    ORDER BY total DESC
+    LIMIT 20
+  `;
+
+  // Featured professionals (top-rated with photos)
+  const featured = await sql`
+    SELECT p.id, p.name, p.slug, p.phone, p.address, p.neighborhood, p.city,
+           p.google_rating, p.google_review_count, p.is_verified, p.is_claimed,
+           p.photo_url, p.hours,
+           c.name as category_name
+    FROM professionals p
+    LEFT JOIN categories c ON p.category_id = c.id
+    WHERE p.is_active = true
+      AND p.google_rating >= 4.5
+      AND p.google_review_count >= 5
+      AND p.photo_url IS NOT NULL
+    ORDER BY p.google_rating DESC, p.google_review_count DESC
+    LIMIT 6
+  `;
 
   return (
     <div>
@@ -73,6 +121,34 @@ export default async function Home() {
             </button>
           </form>
 
+          {/* City quick links */}
+          {topCities.length > 0 && (
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              {topCities.slice(0, 8).map((c: any) => {
+                const citySlug = c.city
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")
+                  .replace(/[àáâãä]/g, "a")
+                  .replace(/[èéêë]/g, "e")
+                  .replace(/[ìíîï]/g, "i")
+                  .replace(/[òóôõö]/g, "o")
+                  .replace(/[ùúûü]/g, "u")
+                  .replace(/[ç]/g, "c")
+                  .replace(/[^a-z0-9-]/g, "");
+                const slug = c.state ? `${citySlug}-${c.state.toLowerCase()}` : citySlug;
+                return (
+                  <Link
+                    key={slug}
+                    href={`/cabeleireira/${slug}`}
+                    className="text-xs px-3 py-1.5 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors"
+                  >
+                    {c.city}{c.state ? `, ${c.state}` : ""}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
           {totalPros > 0 && (
             <p className="text-xs text-gray-400 mt-3">
               {totalPros} profissionais na comunidade
@@ -102,6 +178,22 @@ export default async function Home() {
             </div>
           </section>
         ))}
+
+        {/* Featured Professionals */}
+        {featured.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
+                <span className="text-sm">⭐</span>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Profissionais em destaque</h2>
+                <p className="text-xs text-gray-400">As mais bem avaliadas da comunidade</p>
+              </div>
+            </div>
+            <FeaturedProfessionals professionals={featured as any} />
+          </section>
+        )}
 
         {/* City-based professionals */}
         <CityProfessionals />
@@ -133,6 +225,36 @@ export default async function Home() {
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1 text-sm">{item.title}</h3>
                 <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="mb-12">
+          <h2 className="text-lg font-semibold text-gray-900 mb-5">O que dizem nossas usuárias</h2>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className="bg-white rounded-2xl border border-gray-100 p-5">
+                <div className="flex items-center gap-0.5 mb-3">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-4 h-4 text-amber-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{t.name}</p>
+                  <p className="text-xs text-gray-400">{t.city}</p>
+                </div>
               </div>
             ))}
           </div>

@@ -69,7 +69,7 @@ export default async function AdminPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Painel Admin</h1>
-              <p className="text-xs text-gray-400 mt-0.5">chamei.app</p>
+              <p className="text-xs text-gray-400 mt-0.5">delas.club</p>
             </div>
             <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
               ← Voltar ao site

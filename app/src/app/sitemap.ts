@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ORDER BY c.slug, p.city
   `;
 
-  const base = "https://chamei.app";
+  const base = "https://delas.club";
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },

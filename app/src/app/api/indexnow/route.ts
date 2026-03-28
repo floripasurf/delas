@@ -17,25 +17,24 @@ export async function POST() {
   const categories = await sql`SELECT slug FROM categories`;
 
   const urls = [
-    "https://chamei.app",
-    "https://chamei.app/para-profissionais",
-    "https://chamei.app/eletricista-sp",
-    "https://chamei.app/buscar",
-    ...categories.map((c) => `https://chamei.app/categoria/${c.slug}`),
-    ...pros.map((p) => `https://chamei.app/profissional/${p.slug}`),
+    "https://delas.club",
+    "https://delas.club/para-profissionais",
+    "https://delas.club/buscar",
+    ...categories.map((c) => `https://delas.club/categoria/${c.slug}`),
+    ...pros.map((p) => `https://delas.club/profissional/${p.slug}`),
   ];
 
   // IndexNow key
-  const key = "chamei-indexnow-key-2026";
+  const key = "delas-indexnow-key-2026";
 
   try {
     const res = await fetch("https://api.indexnow.org/indexnow", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        host: "chamei.app",
+        host: "delas.club",
         key,
-        keyLocation: `https://chamei.app/${key}.txt`,
+        keyLocation: `https://delas.club/${key}.txt`,
         urlList: urls.slice(0, 10000),
       }),
     });

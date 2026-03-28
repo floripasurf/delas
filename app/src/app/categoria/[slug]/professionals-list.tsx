@@ -141,14 +141,18 @@ export default function ProfessionalsList({ professionals }: { professionals: Pr
 
   return (
     <div>
-      {/* Sort buttons */}
-      <div className="flex items-center gap-2 mb-5">
-        <span className="text-xs text-gray-400 mr-1">Ordenar:</span>
-        {[
-          { mode: "nearby" as SortMode, label: "📍 Mais perto" },
-          { mode: "rating" as SortMode, label: "Melhor avaliados" },
-          { mode: "reviews" as SortMode, label: "Mais avaliações" },
-        ].map(({ mode, label }) => (
+      {/* Results count + Sort buttons */}
+      <div className="flex items-center justify-between gap-2 mb-5 flex-wrap">
+        <p className="text-sm text-gray-500 font-medium">
+          {sorted.length} profissional{sorted.length !== 1 ? "is" : ""} encontrada{sorted.length !== 1 ? "s" : ""}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400 mr-1">Ordenar:</span>
+          {[
+            { mode: "nearby" as SortMode, label: "Mais perto" },
+            { mode: "rating" as SortMode, label: "Melhor avaliadas" },
+            { mode: "reviews" as SortMode, label: "Mais avaliações" },
+          ].map(({ mode, label }) => (
           <button
             key={mode}
             onClick={() => handleSort(mode)}
@@ -160,7 +164,8 @@ export default function ProfessionalsList({ professionals }: { professionals: Pr
           >
             {mode === "nearby" && geoStatus === "loading" ? "Localizando..." : label}
           </button>
-        ))}
+          ))}
+        </div>
       </div>
 
       {geoStatus === "denied" && (

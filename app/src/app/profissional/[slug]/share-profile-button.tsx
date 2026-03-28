@@ -18,7 +18,7 @@ export default function ShareProfileButton() {
   return (
     <button
       onClick={handleShare}
-      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-colors"
+      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-rose-600 transition-colors"
       title="Compartilhar perfil"
     >
       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

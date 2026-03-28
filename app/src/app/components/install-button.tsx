@@ -46,9 +46,9 @@ export default function InstallButton() {
   return (
     <button
       onClick={handleClick}
-      className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+      className="fixed bottom-6 right-6 z-50 bg-rose-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-rose-700 transition-colors font-medium text-sm"
     >
-      Adicionar Chamei
+      Adicionar Delas
     </button>
   );
 }

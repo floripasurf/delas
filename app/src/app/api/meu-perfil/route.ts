@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 async function getAuthenticatedProfessional() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("chamei_session")?.value;
+  const token = cookieStore.get("delas_session")?.value;
   if (!token) return null;
 
   const sql = neon(process.env.DATABASE_URL!);

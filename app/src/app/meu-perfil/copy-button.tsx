@@ -29,7 +29,7 @@ export default function CopyButton({ url }: { url: string }) {
       className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
         copied
           ? "bg-green-600 text-white"
-          : "bg-blue-600 text-white hover:bg-blue-700"
+          : "bg-rose-600 text-white hover:bg-rose-700"
       }`}
     >
       {copied ? "Copiado!" : "Copiar link"}

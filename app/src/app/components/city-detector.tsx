@@ -21,7 +21,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check localStorage first
-    const cached = localStorage.getItem("chamei_city");
+    const cached = localStorage.getItem("delas_city");
     if (cached) {
       try {
         const data = JSON.parse(cached);
@@ -51,7 +51,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
             setCity(data.city);
             setState(data.state);
             localStorage.setItem(
-              "chamei_city",
+              "delas_city",
               JSON.stringify({ city: data.city, state: data.state, ts: Date.now() })
             );
           }

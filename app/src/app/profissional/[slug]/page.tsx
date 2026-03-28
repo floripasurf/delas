@@ -4,6 +4,7 @@ import { getDb } from "@/lib/db";
 import { Professional, ReviewImported } from "@/lib/types";
 import ContactSidebar from "./contact-sidebar";
 import ShareProfileButton from "./share-profile-button";
+import PhotoGallery from "./photo-gallery";
 
 export async function generateMetadata({
   params,
@@ -23,19 +24,19 @@ export async function generateMetadata({
   `;
 
   if (rows.length === 0) {
-    return { title: "Profissional não encontrado | Chamei" };
+    return { title: "Profissional não encontrado | Delas Club" };
   }
 
   const pro = rows[0];
   const city = pro.city ? ` em ${pro.city}` : "";
-  const title = `${pro.name} - ${pro.category_name}${city} | Chamei`;
+  const title = `${pro.name} - ${pro.category_name}${city} | Delas Club`;
 
   const ratingPart =
     pro.google_rating && pro.google_review_count
       ? ` Nota ${pro.google_rating} com ${pro.google_review_count} avaliações.`
       : "";
 
-  const description = `${pro.name} é ${pro.category_name?.toLowerCase()}${city}.${ratingPart} Veja avaliações, contato e mais no Chamei.`;
+  const description = `${pro.name} é ${pro.category_name?.toLowerCase()}${city}.${ratingPart} Veja avaliações, contato e mais no Delas Club.`;
 
   return { title, description };
 }
@@ -57,7 +58,7 @@ function StarRating({ rating, size = "sm" }: { rating: number | null; size?: "sm
 function TierBadge({ tier }: { tier: string }) {
   const styles: Record<string, string> = {
     imported: "bg-gray-100 text-gray-600",
-    claimed: "bg-blue-100 text-blue-700",
+    claimed: "bg-rose-100 text-rose-700",
     verified: "bg-green-100 text-green-700",
     expert: "bg-purple-100 text-purple-700",
     master: "bg-yellow-100 text-yellow-800",
@@ -96,7 +97,7 @@ export default async function ProfessionalPage({
     return (
       <div className="max-w-6xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Profissional não encontrado</h1>
-        <Link href="/" className="text-blue-600 mt-4 inline-block">Voltar ao início</Link>
+        <Link href="/" className="text-rose-600 mt-4 inline-block">Voltar ao início</Link>
       </div>
     );
   }
@@ -110,13 +111,26 @@ export default async function ProfessionalPage({
     LIMIT 20
   `) as ReviewImported[];
 
+  // Fetch portfolio photos
+  let portfolioPhotos: { id: string; url: string; caption: string | null }[] = [];
+  try {
+    portfolioPhotos = (await sql`
+      SELECT id, url, caption
+      FROM professional_photos
+      WHERE professional_id = ${pro.id}
+      ORDER BY sort_order ASC, created_at DESC
+    `) as { id: string; url: string; caption: string | null }[];
+  } catch {
+    // Table may not exist yet
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: pro.name,
     ...(pro.address && { address: pro.address }),
     ...(pro.phone && { telephone: pro.phone }),
-    url: `https://chamei.com.br/profissional/${pro.slug}`,
+    url: `https://delas.club/profissional/${pro.slug}`,
     ...(pro.category_name && { serviceType: pro.category_name }),
     ...(pro.google_rating && {
       aggregateRating: {
@@ -190,7 +204,7 @@ export default async function ProfessionalPage({
               {pro.phone && (
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400 w-5">📞</span>
-                  <a href={`tel:${pro.phone}`} className="text-blue-600 hover:underline">{pro.phone}</a>
+                  <a href={`tel:${pro.phone}`} className="text-rose-600 hover:underline">{pro.phone}</a>
                 </div>
               )}
               {pro.website && (
@@ -207,6 +221,9 @@ export default async function ProfessionalPage({
               )}
             </div>
           </div>
+
+          {/* Portfolio Photos */}
+          <PhotoGallery photos={portfolioPhotos} />
 
           {/* Reviews */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">

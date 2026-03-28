@@ -53,12 +53,12 @@ export default function NearbyProfessionals() {
 
   if (status === "idle" || status === "asking") {
     return (
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 text-center">
+      <div className="bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100 rounded-2xl p-6 text-center">
         <div className="text-2xl mb-2">📍</div>
         <p className="text-blue-900 font-medium">
           Quer ver os eletricistas mais perto de você?
         </p>
-        <p className="text-sm text-blue-600 mt-1">
+        <p className="text-sm text-rose-600 mt-1">
           Permita o acesso à localização para ordenar por proximidade
         </p>
       </div>
@@ -68,7 +68,7 @@ export default function NearbyProfessionals() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center gap-3 py-8">
-        <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
         <p className="text-gray-500">Buscando eletricistas perto de você...</p>
       </div>
     );
@@ -81,7 +81,7 @@ export default function NearbyProfessionals() {
   return (
     <div>
       <div className="flex items-center gap-2 mb-5">
-        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
           <span className="text-sm">📍</span>
         </div>
         <div>

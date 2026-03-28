@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/db";
 import { Professional } from "@/lib/types";
-import ProfessionalCard from "@/app/components/professional-card";
+import ProfessionalsList from "@/app/categoria/[slug]/professionals-list";
 import Link from "next/link";
 
 function formatCityName(slug: string): string {
@@ -45,7 +45,7 @@ export async function generateMetadata({
   `;
   const total = countRows[0]?.total || 0;
 
-  const title = `${catName} em ${cityName}${state ? `, ${state}` : ""} | Chamei`;
+  const title = `${catName} em ${cityName}${state ? `, ${state}` : ""} | Delas Club`;
   const description = `Encontre os melhores profissionais de ${catName.toLowerCase()} em ${cityName}. ${total} profissionais avaliados com nota no Google. Compare e chame pelo WhatsApp. Grátis.`;
 
   return {
@@ -54,7 +54,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://chamei.app/${category}/${city}`,
+      url: `https://delas.club/${category}/${city}`,
     },
   };
 }
@@ -74,7 +74,7 @@ export default async function CityCategoryPage({
     return (
       <div className="max-w-5xl mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Categoria não encontrada</h1>
-        <Link href="/" className="text-blue-600 mt-4 inline-block">Voltar ao início</Link>
+        <Link href="/" className="text-rose-600 mt-4 inline-block">Voltar ao início</Link>
       </div>
     );
   }
@@ -85,7 +85,9 @@ export default async function CityCategoryPage({
     : formatCityName(city);
 
   const pros = (await sql`
-    SELECT p.*,
+    SELECT p.id, p.name, p.slug, p.phone, p.address, p.neighborhood, p.city,
+           p.google_rating, p.google_review_count, p.is_verified, p.is_claimed,
+           p.photo_url, p.hours, p.latitude, p.longitude,
       (SELECT row_to_json(r) FROM (
         SELECT author_name, text, rating FROM reviews_imported
         WHERE professional_id = p.id AND text IS NOT NULL
@@ -96,7 +98,7 @@ export default async function CityCategoryPage({
       AND (p.city ILIKE ${`%${cityName}%`} OR p.address ILIKE ${`%${cityName}%`})
     ORDER BY p.google_rating DESC NULLS LAST, p.google_review_count DESC NULLS LAST
     LIMIT 50
-  `) as (Professional & { top_review?: any })[];
+  `) as any[];
 
   // Get other cities with this category for internal linking
   const otherCities = await sql`
@@ -132,7 +134,7 @@ export default async function CityCategoryPage({
     itemListElement: pros.slice(0, 20).map((p, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://chamei.app/profissional/${p.slug}`,
+      url: `https://delas.club/profissional/${p.slug}`,
       name: p.name,
     })),
   };
@@ -164,11 +166,9 @@ export default async function CityCategoryPage({
         </section>
 
         <div className="max-w-5xl mx-auto px-4 py-8">
-          {/* Listing */}
-          <div className="grid gap-3 sm:grid-cols-2 mb-12">
-            {pros.map((pro) => (
-              <ProfessionalCard key={pro.id} pro={pro} topReview={pro.top_review} />
-            ))}
+          {/* Listing with sorting */}
+          <div className="mb-12">
+            <ProfessionalsList professionals={pros} />
           </div>
 
           {pros.length === 0 && (
@@ -179,7 +179,7 @@ export default async function CityCategoryPage({
               <p className="text-sm text-gray-400 mt-1">
                 Estamos adicionando novos profissionais todos os dias.
               </p>
-              <Link href={`/categoria/${category}`} className="text-blue-600 text-sm mt-3 inline-block">
+              <Link href={`/categoria/${category}`} className="text-rose-600 text-sm mt-3 inline-block">
                 Ver todos os {cat.name.toLowerCase()}s
               </Link>
             </div>
@@ -196,7 +196,7 @@ export default async function CityCategoryPage({
                   <Link
                     key={c.slug}
                     href={`/${c.slug}/${city}`}
-                    className="px-3 py-1.5 bg-white border border-gray-100 rounded-full text-xs text-gray-600 hover:border-blue-200 hover:text-blue-600 transition-colors"
+                    className="px-3 py-1.5 bg-white border border-gray-100 rounded-full text-xs text-gray-600 hover:border-rose-200 hover:text-rose-600 transition-colors"
                   >
                     {c.name} ({c.total})
                   </Link>
@@ -218,7 +218,7 @@ export default async function CityCategoryPage({
                     <Link
                       key={slug}
                       href={`/${category}/${slug}`}
-                      className="px-3 py-1.5 bg-white border border-gray-100 rounded-full text-xs text-gray-600 hover:border-blue-200 hover:text-blue-600 transition-colors"
+                      className="px-3 py-1.5 bg-white border border-gray-100 rounded-full text-xs text-gray-600 hover:border-rose-200 hover:text-rose-600 transition-colors"
                     >
                       {c.city}{c.state ? `, ${c.state}` : ""} ({c.total})
                     </Link>
@@ -230,18 +230,18 @@ export default async function CityCategoryPage({
 
           {/* CTA */}
           <section className="mb-8">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
+            <div className="bg-gradient-to-r from-rose-600 to-pink-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
               <div className="flex-1 text-white">
                 <h2 className="text-xl font-bold">
                   Você é {cat.name.toLowerCase()} em {cityName}?
                 </h2>
-                <p className="text-blue-100 mt-1 text-sm">
+                <p className="text-rose-100 mt-1 text-sm">
                   Cadastre-se grátis e receba clientes pelo WhatsApp.
                 </p>
               </div>
               <a
                 href="/para-profissionais"
-                className="shrink-0 bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-colors text-sm"
+                className="shrink-0 bg-white text-rose-600 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
               >
                 Quero receber clientes
               </a>

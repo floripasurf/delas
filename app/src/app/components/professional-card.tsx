@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-const PLATFORM_NAME = "Chamei";
+const PLATFORM_NAME = "Delas Club";
 
 interface CardProfessional {
   id: string;
@@ -15,6 +15,7 @@ interface CardProfessional {
   google_rating: number | null;
   google_review_count: number;
   is_verified: boolean;
+  is_claimed?: boolean;
   photo_url: string | null;
   hours: string | null;
   distance_km?: number;
@@ -60,7 +61,7 @@ function TrustSignals({ pro }: { pro: CardProfessional }) {
   }
 
   if (pro.hours && (/24/.test(pro.hours) || /aberto/i.test(pro.hours))) {
-    badges.push({ label: "Disponível agora", color: "text-blue-600" });
+    badges.push({ label: "Disponível agora", color: "text-rose-600" });
   }
 
   if (badges.length === 0 && !pro.phone) return null;
@@ -108,15 +109,15 @@ export default function ProfessionalCard({
     : null;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-rose-200 transition-all overflow-hidden group">
       <div className="flex">
         {/* Photo */}
-        <Link href={`/profissional/${pro.slug}`} className="shrink-0">
+        <Link href={`/profissional/${pro.slug}`} className="shrink-0 relative">
           {pro.photo_url ? (
             <img
               src={pro.photo_url}
               alt={pro.name}
-              className="w-28 h-full sm:w-36 object-cover bg-gray-100"
+              className="w-28 h-full sm:w-36 object-cover bg-gray-100 group-hover:brightness-95 transition-all"
               loading="lazy"
             />
           ) : (
@@ -126,6 +127,14 @@ export default function ProfessionalCard({
               </span>
             </div>
           )}
+          {(pro.is_claimed || pro.is_verified) && (
+            <span className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Verificada
+            </span>
+          )}
         </Link>
 
         {/* Content */}
@@ -133,28 +142,28 @@ export default function ProfessionalCard({
           <div>
             <div className="flex items-start justify-between gap-2">
               <Link href={`/profissional/${pro.slug}`} className="min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate hover:text-blue-600 transition-colors">
+                <h3 className="font-semibold text-gray-900 truncate group-hover:text-rose-600 transition-colors text-[15px]">
                   {pro.name}
                 </h3>
               </Link>
               {pro.distance_km !== undefined && (
-                <span className="shrink-0 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                <span className="shrink-0 text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
                   {formatDistance(pro.distance_km)}
                 </span>
               )}
             </div>
 
             {/* Location */}
-            <p className="text-sm text-gray-500 mt-0.5 truncate">
-              {pro.neighborhood || pro.city || pro.address || "São Paulo, SP"}
+            <p className="text-xs text-gray-400 mt-0.5 truncate">
+              {pro.neighborhood || pro.city || pro.address || ""}
             </p>
 
             {/* Rating */}
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-1.5">
               {pro.google_rating ? (
                 <>
                   <StarRating rating={pro.google_rating} />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-semibold text-gray-800">
                     {pro.google_rating}
                   </span>
                   <span className="text-xs text-gray-400">
@@ -206,7 +215,7 @@ export default function ProfessionalCard({
             )}
             <Link
               href={`/profissional/${pro.slug}`}
-              className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 transition-colors px-3 py-2"
+              className="inline-flex items-center text-sm text-gray-500 hover:text-rose-600 transition-colors px-3 py-2"
             >
               Ver perfil
             </Link>

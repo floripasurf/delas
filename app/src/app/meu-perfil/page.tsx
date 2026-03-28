@@ -6,7 +6,7 @@ import PhotoUpload from "./photo-upload";
 import CopyButton from "./copy-button";
 
 export const metadata = {
-  title: "Meu Perfil | Chamei",
+  title: "Meu Perfil | Delas Club",
 };
 
 export default async function MeuPerfilPage() {
@@ -16,7 +16,7 @@ export default async function MeuPerfilPage() {
     redirect("/");
   }
 
-  const profileUrl = `https://chamei.app/profissional/${pro.slug}`;
+  const profileUrl = `https://delas.club/profissional/${pro.slug}`;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

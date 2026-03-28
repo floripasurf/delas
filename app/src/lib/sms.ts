@@ -17,7 +17,7 @@ export async function sendVerificationCode(
   const cleanPhone = phoneNumber.replace(/\D/g, "");
   const fullPhone = cleanPhone.startsWith("55") ? `+${cleanPhone}` : `+55${cleanPhone}`;
 
-  const body = `Seu código de verificação no Chamei é: ${code}. Válido por 10 minutos. Não compartilhe este código.`;
+  const body = `Seu código de verificação no Delas Club é: ${code}. Válido por 10 minutos. Não compartilhe este código.`;
 
   try {
     const response = await fetch(
