@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chamei.app/sitemap.xml
+Sitemap: https://delas.club/sitemap.xml
