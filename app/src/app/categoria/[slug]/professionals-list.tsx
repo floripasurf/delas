@@ -69,8 +69,32 @@ function sortByProximity(list: Pro[], lat: number, lng: number) {
   });
 }
 
-export default function ProfessionalsList({ professionals }: { professionals: Pro[] }) {
+async function fetchNearbyByCategory(categorySlug: string, lat: number, lng: number): Promise<Pro[]> {
+  const params = new URLSearchParams({
+    category: categorySlug,
+    lat: String(lat),
+    lng: String(lng),
+    limit: "100",
+  });
+  const response = await fetch(`/api/professionals/search?${params.toString()}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch nearby professionals");
+  }
+
+  const data = await response.json();
+  return data.professionals || [];
+}
+
+export default function ProfessionalsList({
+  professionals,
+  categorySlug,
+}: {
+  professionals: Pro[];
+  categorySlug: string;
+}) {
   const [sortMode, setSortMode] = useState<SortMode>("nearby");
+  const [currentList, setCurrentList] = useState<Pro[]>(professionals);
   const [sorted, setSorted] = useState<Pro[]>(professionals);
   const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "done" | "denied">("idle");
   const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
@@ -86,11 +110,19 @@ export default function ProfessionalsList({ professionals }: { professionals: Pr
 
     setGeoStatus("loading");
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setUserLoc(loc);
-        setGeoStatus("done");
-        setSorted(sortByProximity(professionals, loc.lat, loc.lng));
+        try {
+          const nearby = await fetchNearbyByCategory(categorySlug, loc.lat, loc.lng);
+          setCurrentList(nearby);
+          setSorted(nearby);
+          setGeoStatus("done");
+        } catch {
+          setCurrentList(professionals);
+          setSorted(sortByProximity(professionals, loc.lat, loc.lng));
+          setGeoStatus("done");
+        }
       },
       () => {
         // Fallback to rating if geo denied
@@ -100,7 +132,7 @@ export default function ProfessionalsList({ professionals }: { professionals: Pr
       },
       { enableHighAccuracy: false, timeout: 10000 }
     );
-  }, [professionals]);
+  }, [professionals, categorySlug]);
 
   function sortByRating(list: Pro[]) {
     return [...list].sort((a, b) => (b.google_rating || 0) - (a.google_rating || 0));
@@ -114,20 +146,28 @@ export default function ProfessionalsList({ professionals }: { professionals: Pr
     setSortMode(mode);
 
     if (mode === "rating") {
-      setSorted(sortByRating(professionals));
+      setSorted(sortByRating(currentList));
     } else if (mode === "reviews") {
-      setSorted(sortByReviews(professionals));
+      setSorted(sortByReviews(currentList));
     } else if (mode === "nearby") {
       if (userLoc) {
-        setSorted(sortByProximity(professionals, userLoc.lat, userLoc.lng));
+        setSorted(sortByProximity(currentList, userLoc.lat, userLoc.lng));
       } else {
         setGeoStatus("loading");
         navigator.geolocation.getCurrentPosition(
-          (pos) => {
+          async (pos) => {
             const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             setUserLoc(loc);
-            setGeoStatus("done");
-            setSorted(sortByProximity(professionals, loc.lat, loc.lng));
+            try {
+              const nearby = await fetchNearbyByCategory(categorySlug, loc.lat, loc.lng);
+              setCurrentList(nearby);
+              setSorted(nearby);
+              setGeoStatus("done");
+            } catch {
+              setCurrentList(professionals);
+              setSorted(sortByProximity(professionals, loc.lat, loc.lng));
+              setGeoStatus("done");
+            }
           },
           () => {
             setGeoStatus("denied");

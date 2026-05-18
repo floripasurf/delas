@@ -73,6 +73,13 @@ export default async function CategoryPage({
     LIMIT 100
   `) as (Professional & { top_review?: { author_name: string | null; text: string | null; rating: number | null } | null })[];
 
+  const countRows = await sql`
+    SELECT COUNT(*)::int as total
+    FROM professionals
+    WHERE category_id = ${category.id} AND is_active = true
+  `;
+  const totalProfessionals = countRows[0]?.total ?? pros.length;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -105,13 +112,13 @@ export default async function CategoryPage({
             {category.name}
           </h1>
           <p className="text-gray-500 mt-1 text-sm">
-            {pros.length} profissionais encontrados
+            {totalProfessionals} profissionais encontrados
           </p>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <ProfessionalsList professionals={pros} />
+        <ProfessionalsList professionals={pros} categorySlug={category.slug} />
 
         {/* CTA */}
         <section className="mt-12">

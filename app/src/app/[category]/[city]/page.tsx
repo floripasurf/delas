@@ -194,7 +194,7 @@ export default async function CityCategoryPage({
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* Listing with sorting */}
           <div className="mb-12">
-            <ProfessionalsList professionals={pros} />
+            <ProfessionalsList professionals={pros} categorySlug={category} />
           </div>
 
           {pros.length === 0 && (
