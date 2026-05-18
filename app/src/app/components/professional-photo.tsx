@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function getInitials(name: string): string {
   return name
@@ -9,6 +9,12 @@ function getInitials(name: string): string {
     .map((word) => word[0])
     .join("")
     .toUpperCase();
+}
+
+function isStaleGooglePhotoUrl(src: string | null): boolean {
+  return Boolean(
+    src?.startsWith("https://lh3.googleusercontent.com/gps-cs-s/AHVA")
+  );
 }
 
 export default function ProfessionalPhoto({
@@ -25,13 +31,18 @@ export default function ProfessionalPhoto({
   initialsClassName?: string;
 }) {
   const [failed, setFailed] = useState(false);
-  const shouldShowImage = src && !failed;
+  const usableSrc = isStaleGooglePhotoUrl(src) ? null : src;
+  const shouldShowImage = usableSrc && !failed;
+
+  useEffect(() => {
+    setFailed(false);
+  }, [usableSrc]);
 
   if (shouldShowImage) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={src}
+        src={usableSrc}
         alt={name}
         className={className}
         loading="lazy"

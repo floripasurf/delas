@@ -18,6 +18,7 @@ interface CardProfessional {
   is_verified: boolean;
   is_claimed?: boolean;
   photo_url: string | null;
+  profile_photo_url?: string | null;
   hours: string | null;
   distance_km?: number;
 }
@@ -107,7 +108,7 @@ export default function ProfessionalCard({
         <Link href={`/profissional/${pro.slug}`} className="shrink-0 relative">
           <ProfessionalPhoto
             name={pro.name}
-            src={pro.photo_url}
+            src={pro.profile_photo_url || pro.photo_url}
             className="w-28 h-full sm:w-36 object-cover bg-gray-100 group-hover:brightness-95 transition-all"
             fallbackClassName="w-28 h-full sm:w-36 bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center min-h-[120px]"
           />
