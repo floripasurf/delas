@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category") || "";
   const lat = parseFloat(searchParams.get("lat") || "");
   const lng = parseFloat(searchParams.get("lng") || "");
+  const radius = parseFloat(searchParams.get("radius") || "15");
   const limit = parseInt(searchParams.get("limit") || "30");
 
   const sql = neon(process.env.DATABASE_URL!);
@@ -35,35 +36,35 @@ export async function GET(request: NextRequest) {
 
   // If we have coordinates, return nearby
   if (!isNaN(lat) && !isNaN(lng)) {
+    const maxRadius = Number.isFinite(radius) && radius > 0 ? radius : 15;
+
     if (category) {
       const results = await sql`
-        SELECT p.*, c.name as category_name, c.slug as category_slug,
-          (SELECT row_to_json(r) FROM (
-            SELECT author_name, text, rating FROM reviews_imported
-            WHERE professional_id = p.id AND text IS NOT NULL
-            ORDER BY rating DESC LIMIT 1
-          ) r) as top_review,
-          (6371 * acos(least(1, greatest(-1,
-            cos(radians(${lat})) * cos(radians(p.latitude)) *
-            cos(radians(p.longitude) - radians(${lng})) +
-            sin(radians(${lat})) * sin(radians(p.latitude))
-          )))) AS distance_km
-        FROM professionals p
-        LEFT JOIN categories c ON p.category_id = c.id
-        WHERE p.is_active = true
-          AND c.slug = ${category}
-          AND p.latitude IS NOT NULL
-          AND p.longitude IS NOT NULL
+        WITH nearby AS (
+          SELECT p.*, c.name as category_name, c.slug as category_slug,
+            (SELECT row_to_json(r) FROM (
+              SELECT author_name, text, rating FROM reviews_imported
+              WHERE professional_id = p.id AND text IS NOT NULL
+              ORDER BY rating DESC LIMIT 1
+            ) r) as top_review,
+            (6371 * acos(least(1, greatest(-1,
+              cos(radians(${lat})) * cos(radians(p.latitude)) *
+              cos(radians(p.longitude) - radians(${lng})) +
+              sin(radians(${lat})) * sin(radians(p.latitude))
+            )))) AS distance_km
+          FROM professionals p
+          LEFT JOIN categories c ON p.category_id = c.id
+          WHERE p.is_active = true
+            AND c.slug = ${category}
+            AND p.latitude IS NOT NULL
+            AND p.longitude IS NOT NULL
+        )
+        SELECT *
+        FROM nearby
+        WHERE distance_km <= ${maxRadius}
         ORDER BY
           CASE
-            WHEN (
-              (6371 * acos(least(1, greatest(-1,
-                cos(radians(${lat})) * cos(radians(p.latitude)) *
-                cos(radians(p.longitude) - radians(${lng})) +
-                sin(radians(${lat})) * sin(radians(p.latitude))
-              )))) <= 10
-              AND p.is_claimed = true
-            ) THEN 0
+            WHEN distance_km <= 10 AND is_claimed = true THEN 0
             ELSE 1
           END,
           distance_km ASC

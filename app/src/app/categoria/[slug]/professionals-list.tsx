@@ -74,6 +74,7 @@ async function fetchNearbyByCategory(categorySlug: string, lat: number, lng: num
     category: categorySlug,
     lat: String(lat),
     lng: String(lng),
+    radius: "15",
     limit: "100",
   });
   const response = await fetch(`/api/professionals/search?${params.toString()}`);
