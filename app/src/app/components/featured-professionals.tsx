@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ProfessionalPhoto from "./professional-photo";
 
 interface FeaturedPro {
   id: string;
@@ -14,15 +15,6 @@ interface FeaturedPro {
   is_claimed: boolean;
   photo_url: string | null;
   category_name: string | null;
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
 }
 
 export default function FeaturedProfessionals({
@@ -42,20 +34,13 @@ export default function FeaturedProfessionals({
         >
           {/* Photo */}
           <div className="relative aspect-[4/3] bg-gray-100">
-            {pro.photo_url ? (
-              <img
-                src={pro.photo_url}
-                alt={pro.name}
-                className="w-full h-full object-cover group-hover:brightness-95 transition-all"
-                loading="lazy"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center">
-                <span className="text-3xl font-bold text-white/90">
-                  {getInitials(pro.name)}
-                </span>
-              </div>
-            )}
+            <ProfessionalPhoto
+              name={pro.name}
+              src={pro.photo_url}
+              className="w-full h-full object-cover group-hover:brightness-95 transition-all"
+              fallbackClassName="w-full h-full bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center"
+              initialsClassName="text-3xl font-bold text-white/90"
+            />
             {(pro.is_claimed || pro.is_verified) && (
               <span className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

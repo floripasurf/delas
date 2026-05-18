@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function LogoIcon({ size = 28, className = "" }: { size?: number; className?: string }) {
   return (
     <svg
@@ -21,7 +23,7 @@ export function LogoIcon({ size = 28, className = "" }: { size?: number; classNa
 
 export function LogoFull({ className = "" }: { className?: string }) {
   return (
-    <a href="/" className={`flex items-center gap-2 ${className}`}>
+    <Link href="/" className={`flex items-center gap-2 ${className}`}>
       <LogoIcon size={30} />
       <span
         className="text-[1.2rem] font-bold tracking-[-0.02em] text-gray-900"
@@ -30,7 +32,7 @@ export function LogoFull({ className = "" }: { className?: string }) {
         delas
         <span className="text-rose-500">.club</span>
       </span>
-    </a>
+    </Link>
   );
 }
 

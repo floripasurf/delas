@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getDb } from "@/lib/db";
 import { Professional } from "@/lib/types";
+import { canonical, sharedOpenGraph, sharedTwitter } from "@/lib/seo";
 import ProfessionalsList from "./professionals-list";
 
 export async function generateMetadata({
@@ -28,7 +29,13 @@ export async function generateMetadata({
   const title = `${category.name} | Delas Club - Profissionais avaliadas`;
   const description = `Encontre as melhores profissionais de ${category.name.toLowerCase()} no Delas Club. ${total} profissionais avaliadas prontas para atender você.`;
 
-  return { title, description };
+  return {
+    title,
+    description,
+    alternates: canonical(`/categoria/${slug}`),
+    openGraph: sharedOpenGraph({ title, description, path: `/categoria/${slug}` }),
+    twitter: sharedTwitter(title, description),
+  };
 }
 
 export default async function CategoryPage({
@@ -115,12 +122,12 @@ export default async function CategoryPage({
                 Cadastre-se grátis e receba clientes pelo WhatsApp.
               </p>
             </div>
-            <a
+            <Link
               href="/para-profissionais"
               className="shrink-0 bg-white text-rose-600 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
             >
               Quero receber clientes
-            </a>
+            </Link>
           </div>
         </section>
       </div>

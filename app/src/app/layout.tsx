@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Inter, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { LogoFull, LogoIcon } from "./components/logo";
 import InstallButton from "./components/install-button";
 import { CityProvider } from "./components/city-detector";
+import { SITE_NAME, SITE_URL, canonical, sharedOpenGraph, sharedTwitter } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,20 +25,38 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Delas Club — Beleza e bem-estar indicados por mulheres",
   description:
     "A comunidade feminina de beleza e bem-estar. Profissionais avaliadas por mulheres de verdade. WhatsApp direto. Grátis.",
   keywords:
     "manicure perto de mim, cabeleireira, maquiadora, esteticista, nail designer, depilação, beleza, bem-estar, comunidade feminina",
-  openGraph: {
+  alternates: canonical("/"),
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: sharedOpenGraph({
     title: "Delas Club — Beleza indicada por mulheres",
     description:
       "A comunidade feminina de beleza e bem-estar. Profissionais avaliadas de verdade. WhatsApp direto. Grátis.",
-    url: "https://delas.club",
-    siteName: "Delas Club",
-    locale: "pt_BR",
-    type: "website",
-  },
+    path: "/",
+  }),
+  twitter: sharedTwitter(
+    "Delas Club — Beleza indicada por mulheres",
+    "Profissionais de beleza e bem-estar avaliadas por mulheres, com WhatsApp direto."
+  ),
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
     : {}),
@@ -91,28 +111,26 @@ export default function RootLayout({
         {/* Header */}
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-            <a href="/">
-              <LogoFull />
-            </a>
+            <LogoFull />
             <nav className="flex items-center gap-3">
-              <a
+              <Link
                 href="/para-profissionais"
                 className="text-sm text-gray-500 hover:text-gray-900 transition-colors hidden sm:block"
               >
                 Para Profissionais
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/blog"
                 className="text-sm text-gray-500 hover:text-gray-900 transition-colors hidden sm:block"
               >
                 Blog
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/para-profissionais"
                 className="bg-rose-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors"
               >
                 Quero fazer parte
-              </a>
+              </Link>
             </nav>
           </div>
         </header>
@@ -138,16 +156,16 @@ export default function RootLayout({
               <div className="flex gap-8 text-xs text-gray-500">
                 <div className="space-y-2">
                   <p className="font-medium text-gray-700 uppercase tracking-wider text-[10px]">Para você</p>
-                  <a href="/categoria/cabeleireira" className="block hover:text-gray-700">Cabeleireiras</a>
-                  <a href="/categoria/manicure" className="block hover:text-gray-700">Manicures</a>
-                  <a href="/categoria/maquiadora" className="block hover:text-gray-700">Maquiadoras</a>
-                  <a href="/categoria/esteticista" className="block hover:text-gray-700">Esteticistas</a>
+                  <Link href="/categoria/cabeleireira" className="block hover:text-gray-700">Cabeleireiras</Link>
+                  <Link href="/categoria/manicure" className="block hover:text-gray-700">Manicures</Link>
+                  <Link href="/categoria/maquiadora" className="block hover:text-gray-700">Maquiadoras</Link>
+                  <Link href="/categoria/esteticista" className="block hover:text-gray-700">Esteticistas</Link>
                 </div>
                 <div className="space-y-2">
                   <p className="font-medium text-gray-700 uppercase tracking-wider text-[10px]">Comunidade</p>
-                  <a href="/para-profissionais" className="block hover:text-gray-700">Para Profissionais</a>
-                  <a href="/para-profissionais#cadastro" className="block hover:text-gray-700">Fazer parte</a>
-                  <a href="/blog" className="block hover:text-gray-700">Blog</a>
+                  <Link href="/para-profissionais" className="block hover:text-gray-700">Para Profissionais</Link>
+                  <Link href="/para-profissionais#cadastro" className="block hover:text-gray-700">Fazer parte</Link>
+                  <Link href="/blog" className="block hover:text-gray-700">Blog</Link>
                 </div>
               </div>
             </div>

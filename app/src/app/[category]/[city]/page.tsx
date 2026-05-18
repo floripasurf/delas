@@ -1,8 +1,35 @@
 import type { Metadata } from "next";
 import { getDb } from "@/lib/db";
-import { Professional } from "@/lib/types";
 import ProfessionalsList from "@/app/categoria/[slug]/professionals-list";
 import Link from "next/link";
+import { canonical, sharedOpenGraph, sharedTwitter } from "@/lib/seo";
+
+type CityProfessional = {
+  id: string;
+  name: string;
+  slug: string;
+  phone: string | null;
+  address: string | null;
+  neighborhood: string | null;
+  city: string | null;
+  google_rating: number | null;
+  google_review_count: number;
+  is_verified: boolean;
+  is_claimed: boolean;
+  photo_url: string | null;
+  hours: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  top_review?: { author_name: string | null; text: string | null; rating: number | null } | null;
+};
+
+type LinkCount = {
+  name?: string;
+  slug?: string;
+  city?: string;
+  state?: string | null;
+  total: number;
+};
 
 function formatCityName(slug: string): string {
   return slug
@@ -51,11 +78,10 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      url: `https://delas.club/${category}/${city}`,
-    },
+    alternates: canonical(`/${category}/${city}`),
+    openGraph: sharedOpenGraph({ title, description, path: `/${category}/${city}` }),
+    twitter: sharedTwitter(title, description),
+    robots: total > 0 ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
@@ -98,7 +124,7 @@ export default async function CityCategoryPage({
       AND (p.city ILIKE ${`%${cityName}%`} OR p.address ILIKE ${`%${cityName}%`})
     ORDER BY p.google_rating DESC NULLS LAST, p.google_review_count DESC NULLS LAST
     LIMIT 50
-  `) as any[];
+  `) as CityProfessional[];
 
   // Get other cities with this category for internal linking
   const otherCities = await sql`
@@ -192,7 +218,7 @@ export default async function CityCategoryPage({
                 Outros serviços em {cityName}
               </h2>
               <div className="flex flex-wrap gap-2">
-                {otherCategories.map((c: any) => (
+                {(otherCategories as LinkCount[]).map((c) => (
                   <Link
                     key={c.slug}
                     href={`/${c.slug}/${city}`}
@@ -212,7 +238,8 @@ export default async function CityCategoryPage({
                 {cat.name} em outras cidades
               </h2>
               <div className="flex flex-wrap gap-2">
-                {otherCities.map((c: any) => {
+                {(otherCities as LinkCount[]).map((c) => {
+                  if (!c.city) return null;
                   const slug = `${c.city.toLowerCase().replace(/\s+/g, "-")}${c.state ? `-${c.state.toLowerCase()}` : ""}`;
                   return (
                     <Link
@@ -239,12 +266,12 @@ export default async function CityCategoryPage({
                   Cadastre-se grátis e receba clientes pelo WhatsApp.
                 </p>
               </div>
-              <a
+              <Link
                 href="/para-profissionais"
                 className="shrink-0 bg-white text-rose-600 px-6 py-3 rounded-xl font-semibold hover:bg-rose-50 transition-colors text-sm"
               >
                 Quero receber clientes
-              </a>
+              </Link>
             </div>
           </section>
         </div>

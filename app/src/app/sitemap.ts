@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { neon } from "@neondatabase/serverless";
+import { SITE_URL, isIndexableCity, slugifyCity } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sql = neon(process.env.DATABASE_URL!);
@@ -22,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ORDER BY c.slug, p.city
   `;
 
-  const base = "https://delas.club";
+  const base = SITE_URL;
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
@@ -38,19 +39,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // City + Category landing pages (highest SEO value)
-  const citySlugify = (city: string, state: string | null) => {
-    const slug = city.toLowerCase().replace(/\s+/g, "-")
-      .replace(/[àáâãä]/g, "a").replace(/[èéêë]/g, "e")
-      .replace(/[ìíîï]/g, "i").replace(/[òóôõö]/g, "o")
-      .replace(/[ùúûü]/g, "u").replace(/[ç]/g, "c")
-      .replace(/[^a-z0-9-]/g, "");
-    return state ? `${slug}-${state.toLowerCase()}` : slug;
-  };
-
   const seen = new Set<string>();
   const cityCategoryPages: MetadataRoute.Sitemap = cityCombos
+    .filter((combo) => isIndexableCity(combo.city))
     .map((combo) => {
-      const citySlug = citySlugify(combo.city, combo.state);
+      const citySlug = slugifyCity(combo.city, combo.state);
       const key = `${combo.cat_slug}/${citySlug}`;
       if (seen.has(key)) return null;
       seen.add(key);

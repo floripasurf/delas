@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ProfessionalPhoto from "./professional-photo";
 
 const PLATFORM_NAME = "Delas Club";
 
@@ -87,15 +88,6 @@ function formatDistance(km: number): string {
   return `${km.toFixed(1)}km`;
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-}
-
 export default function ProfessionalCard({
   pro,
   topReview,
@@ -113,20 +105,12 @@ export default function ProfessionalCard({
       <div className="flex">
         {/* Photo */}
         <Link href={`/profissional/${pro.slug}`} className="shrink-0 relative">
-          {pro.photo_url ? (
-            <img
-              src={pro.photo_url}
-              alt={pro.name}
-              className="w-28 h-full sm:w-36 object-cover bg-gray-100 group-hover:brightness-95 transition-all"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-28 h-full sm:w-36 bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center min-h-[120px]">
-              <span className="text-2xl font-bold text-white/90">
-                {getInitials(pro.name)}
-              </span>
-            </div>
-          )}
+          <ProfessionalPhoto
+            name={pro.name}
+            src={pro.photo_url}
+            className="w-28 h-full sm:w-36 object-cover bg-gray-100 group-hover:brightness-95 transition-all"
+            fallbackClassName="w-28 h-full sm:w-36 bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center min-h-[120px]"
+          />
           {(pro.is_claimed || pro.is_verified) && (
             <span className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

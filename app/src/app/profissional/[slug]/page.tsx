@@ -5,6 +5,7 @@ import { Professional, ReviewImported } from "@/lib/types";
 import ContactSidebar from "./contact-sidebar";
 import ShareProfileButton from "./share-profile-button";
 import PhotoGallery from "./photo-gallery";
+import { absoluteUrl, canonical, sharedOpenGraph, sharedTwitter } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -15,7 +16,7 @@ export async function generateMetadata({
   const sql = getDb();
 
   const rows = await sql`
-    SELECT p.name, p.google_rating, p.google_review_count, p.city,
+    SELECT p.name, p.google_rating, p.google_review_count, p.city, p.photo_url, p.profile_photo_url,
            c.name as category_name
     FROM professionals p
     LEFT JOIN categories c ON p.category_id = c.id
@@ -38,7 +39,21 @@ export async function generateMetadata({
 
   const description = `${pro.name} é ${pro.category_name?.toLowerCase()}${city}.${ratingPart} Veja avaliações, contato e mais no Delas Club.`;
 
-  return { title, description };
+  const image = pro.profile_photo_url || pro.photo_url;
+
+  return {
+    title,
+    description,
+    alternates: canonical(`/profissional/${slug}`),
+    openGraph: sharedOpenGraph({
+      title,
+      description,
+      path: `/profissional/${slug}`,
+      type: "profile",
+      images: image ? [image] : undefined,
+    }),
+    twitter: sharedTwitter(title, description),
+  };
 }
 
 function StarRating({ rating, size = "sm" }: { rating: number | null; size?: "sm" | "lg" }) {
@@ -128,9 +143,10 @@ export default async function ProfessionalPage({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: pro.name,
+    image: pro.profile_photo_url || pro.photo_url || undefined,
     ...(pro.address && { address: pro.address }),
     ...(pro.phone && { telephone: pro.phone }),
-    url: `https://delas.club/profissional/${pro.slug}`,
+    url: absoluteUrl(`/profissional/${pro.slug}`),
     ...(pro.category_name && { serviceType: pro.category_name }),
     ...(pro.google_rating && {
       aggregateRating: {
@@ -205,12 +221,6 @@ export default async function ProfessionalPage({
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400 w-5">📞</span>
                   <a href={`tel:${pro.phone}`} className="text-rose-600 hover:underline">{pro.phone}</a>
-                </div>
-              )}
-              {pro.website && (
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 w-5">🌐</span>
-                  <span className="text-gray-700">{pro.website}</span>
                 </div>
               )}
               {pro.hours && (

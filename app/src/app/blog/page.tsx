@@ -1,19 +1,22 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { getDb } from "@/lib/db";
+import { canonical, sharedOpenGraph, sharedTwitter } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Blog | Delas Club - Beleza, Estética e Bem-Estar",
   description:
     "Dicas de beleza, estética e bem-estar de mulher pra mulher. Guias práticos, tendências e como encontrar a profissional ideal.",
-  openGraph: {
+  alternates: canonical("/blog"),
+  openGraph: sharedOpenGraph({
     title: "Blog | Delas Club - Beleza, Estética e Bem-Estar",
-    description:
-      "Dicas de beleza e bem-estar de mulher pra mulher.",
-    url: "https://delas.club/blog",
-    siteName: "Delas Club",
-    locale: "pt_BR",
-    type: "website",
-  },
+    description: "Dicas de beleza e bem-estar de mulher pra mulher.",
+    path: "/blog",
+  }),
+  twitter: sharedTwitter(
+    "Blog | Delas Club - Beleza, Estética e Bem-Estar",
+    "Dicas práticas de beleza, estética e bem-estar para escolher profissionais com confiança."
+  ),
 };
 
 function formatDate(date: string) {
@@ -57,9 +60,9 @@ export default async function BlogPage() {
       {/* Breadcrumb */}
       <div className="max-w-5xl mx-auto px-4 pt-6">
         <nav className="text-xs text-gray-400">
-          <a href="/" className="hover:text-gray-600">
+          <Link href="/" className="hover:text-gray-600">
             Início
-          </a>
+          </Link>
           <span className="mx-1.5">/</span>
           <span className="text-gray-600">Blog</span>
         </nav>
@@ -84,7 +87,7 @@ export default async function BlogPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {posts.map((post) => (
-              <a
+              <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
                 className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
@@ -92,6 +95,7 @@ export default async function BlogPage() {
                 {/* Cover image or gradient placeholder */}
                 <div className="h-48 bg-gradient-to-br from-rose-50 to-rose-100 relative overflow-hidden">
                   {post.cover_image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={post.cover_image_url}
                       alt={post.title}
@@ -141,7 +145,7 @@ export default async function BlogPage() {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         )}

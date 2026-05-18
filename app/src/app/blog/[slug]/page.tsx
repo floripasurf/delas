@@ -1,6 +1,8 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { getDb } from "@/lib/db";
 import { notFound } from "next/navigation";
+import { SITE_NAME, absoluteUrl, canonical, sharedTwitter } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -13,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const sql = getDb();
   try {
     const rows = await sql`
-      SELECT title, excerpt FROM blog_posts WHERE slug = ${slug} AND published = true
+      SELECT title, excerpt, cover_image_url, published_at, updated_at, author FROM blog_posts WHERE slug = ${slug} AND published = true
     `;
 
     if (rows.length === 0) return { title: "Artigo não encontrado | Delas Club" };
@@ -22,14 +24,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${post.title} | Blog Delas Club`,
       description: post.excerpt,
+      alternates: canonical(`/blog/${slug}`),
       openGraph: {
         title: post.title,
         description: post.excerpt,
-        url: `https://delas.club/blog/${slug}`,
-        siteName: "Delas Club",
+        url: absoluteUrl(`/blog/${slug}`),
+        siteName: SITE_NAME,
         locale: "pt_BR",
         type: "article",
+        images: post.cover_image_url ? [{ url: absoluteUrl(post.cover_image_url), alt: post.title }] : undefined,
+        publishedTime: post.published_at,
+        modifiedTime: post.updated_at,
+        authors: [post.author || "Delas Club"],
       },
+      twitter: sharedTwitter(post.title, post.excerpt),
     };
   } catch {
     return { title: "Blog | Delas Club" };
@@ -109,7 +117,7 @@ export default async function BlogPostPage({ params }: Props) {
     },
     datePublished: post.published_at,
     dateModified: post.updated_at,
-    mainEntityOfPage: `https://delas.club/blog/${slug}`,
+    mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
     ...(post.cover_image_url ? { image: post.cover_image_url } : {}),
   };
 
@@ -124,13 +132,13 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="max-w-3xl mx-auto px-4 pt-6 pb-16">
         {/* Breadcrumb */}
         <nav className="text-xs text-gray-400 mb-8">
-          <a href="/" className="hover:text-gray-600">
+          <Link href="/" className="hover:text-gray-600">
             Início
-          </a>
+          </Link>
           <span className="mx-1.5">/</span>
-          <a href="/blog" className="hover:text-gray-600">
+          <Link href="/blog" className="hover:text-gray-600">
             Blog
-          </a>
+          </Link>
           <span className="mx-1.5">/</span>
           <span className="text-gray-600">{post.title}</span>
         </nav>
@@ -157,6 +165,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Cover image */}
         {post.cover_image_url && (
           <div className="mb-8 rounded-2xl overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.cover_image_url}
               alt={post.title}
@@ -180,12 +189,12 @@ export default async function BlogPostPage({ params }: Props) {
             No Delas, mulheres indicam profissionais para outras mulheres.
             WhatsApp direto. Grátis.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block mt-4 bg-rose-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-700 transition-colors"
           >
             Encontrar profissional
-          </a>
+          </Link>
         </div>
 
         {/* Related posts */}
@@ -196,13 +205,14 @@ export default async function BlogPostPage({ params }: Props) {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {related.map((r) => (
-                <a
+                <Link
                   key={r.id}
                   href={`/blog/${r.slug}`}
                   className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <div className="h-32 bg-gradient-to-br from-rose-50 to-rose-100">
                     {r.cover_image_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={r.cover_image_url}
                         alt={r.title}
@@ -218,7 +228,7 @@ export default async function BlogPostPage({ params }: Props) {
                       {r.excerpt}
                     </p>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           </section>
