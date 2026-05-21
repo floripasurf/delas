@@ -15,7 +15,13 @@ export async function GET(request: NextRequest) {
   if (q) {
     const searchTerm = `%${q}%`;
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
       FROM professionals p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.is_active = true
@@ -35,7 +41,13 @@ export async function GET(request: NextRequest) {
   // If we have coordinates, return nearby
   if (!isNaN(lat) && !isNaN(lng)) {
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug,
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug,
         (6371 * acos(
           cos(radians(${lat})) * cos(radians(p.latitude)) *
           cos(radians(p.longitude) - radians(${lng})) +
@@ -52,11 +64,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ professionals: results, total: results.length });
   }
 
+
   // If we have city name, filter by city
   if (city) {
     const cityTerm = `%${city}%`;
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
       FROM professionals p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.is_active = true
@@ -69,7 +88,13 @@ export async function GET(request: NextRequest) {
 
   // Default: top rated
   const results = await sql`
-    SELECT p.*, c.name as category_name, c.slug as category_slug
+    SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
     FROM professionals p
     LEFT JOIN categories c ON p.category_id = c.id
     WHERE p.is_active = true
