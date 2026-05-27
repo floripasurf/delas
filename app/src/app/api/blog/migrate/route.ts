@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const sql = neon(process.env.DATABASE_URL!);
 

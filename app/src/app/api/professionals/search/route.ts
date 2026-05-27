@@ -15,7 +15,13 @@ export async function GET(request: NextRequest) {
   if (q) {
     const searchTerm = `%${q}%`;
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
       FROM professionals p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.is_active = true
@@ -29,13 +35,22 @@ export async function GET(request: NextRequest) {
       ORDER BY p.google_rating DESC NULLS LAST
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
 
   // If we have coordinates, return nearby
   if (!isNaN(lat) && !isNaN(lng)) {
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug,
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug,
         (6371 * acos(
           cos(radians(${lat})) * cos(radians(p.latitude)) *
           cos(radians(p.longitude) - radians(${lng})) +
@@ -49,14 +64,24 @@ export async function GET(request: NextRequest) {
       ORDER BY distance_km ASC
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
+
 
   // If we have city name, filter by city
   if (city) {
     const cityTerm = `%${city}%`;
     const results = await sql`
-      SELECT p.*, c.name as category_name, c.slug as category_slug
+      SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
       FROM professionals p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.is_active = true
@@ -64,17 +89,29 @@ export async function GET(request: NextRequest) {
       ORDER BY p.google_rating DESC NULLS LAST
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
 
   // Default: top rated
   const results = await sql`
-    SELECT p.*, c.name as category_name, c.slug as category_slug
+    SELECT
+        p.id, p.slug, p.name, p.phone, p.whatsapp, p.description,
+        p.address, p.neighborhood, p.city, p.state,
+        p.google_rating, p.google_review_count,
+        p.photo_url, p.hours, p.is_verified, p.is_claimed,
+        p.category_id,
+        c.name as category_name, c.slug as category_slug
     FROM professionals p
     LEFT JOIN categories c ON p.category_id = c.id
     WHERE p.is_active = true
     ORDER BY p.google_rating DESC NULLS LAST
     LIMIT ${limit}
   `;
-  return NextResponse.json({ professionals: results, total: results.length });
+  return NextResponse.json(
+    { professionals: results, total: results.length },
+    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+  );
 }

@@ -14,9 +14,16 @@ export async function GET(request: NextRequest) {
 
   const sql = neon(process.env.DATABASE_URL!);
 
-  // Haversine formula in SQL to calculate distance in km
+  // Public allowlist: only fields the professional card UI consumes.
+  // `latitude`/`longitude` stay in the WHERE/distance calc but are not returned
+  // to the client to avoid leaking precise business coordinates.
   const professionals = await sql`
-    SELECT *,
+    SELECT
+      id, slug, name, phone, whatsapp, description,
+      address, neighborhood, city, state,
+      google_rating, google_review_count,
+      photo_url, hours, is_verified, is_claimed,
+      category_id,
       (6371 * acos(
         cos(radians(${lat})) * cos(radians(latitude)) *
         cos(radians(longitude) - radians(${lng})) +
@@ -35,5 +42,12 @@ export async function GET(request: NextRequest) {
     LIMIT ${limit}
   `;
 
-  return NextResponse.json({ professionals, total: professionals.length });
+  return NextResponse.json(
+    { professionals, total: professionals.length },
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    }
+  );
 }

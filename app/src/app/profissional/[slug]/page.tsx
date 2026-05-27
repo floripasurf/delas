@@ -5,6 +5,8 @@ import { Professional, ReviewImported } from "@/lib/types";
 import ContactSidebar from "./contact-sidebar";
 import ShareProfileButton from "./share-profile-button";
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {
