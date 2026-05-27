@@ -35,7 +35,10 @@ export async function GET(request: NextRequest) {
       ORDER BY p.google_rating DESC NULLS LAST
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
 
   // If we have coordinates, return nearby
@@ -61,7 +64,10 @@ export async function GET(request: NextRequest) {
       ORDER BY distance_km ASC
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
 
 
@@ -83,7 +89,10 @@ export async function GET(request: NextRequest) {
       ORDER BY p.google_rating DESC NULLS LAST
       LIMIT ${limit}
     `;
-    return NextResponse.json({ professionals: results, total: results.length });
+    return NextResponse.json(
+      { professionals: results, total: results.length },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   }
 
   // Default: top rated
@@ -101,5 +110,8 @@ export async function GET(request: NextRequest) {
     ORDER BY p.google_rating DESC NULLS LAST
     LIMIT ${limit}
   `;
-  return NextResponse.json({ professionals: results, total: results.length });
+  return NextResponse.json(
+    { professionals: results, total: results.length },
+    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+  );
 }

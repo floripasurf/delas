@@ -1,33 +1,66 @@
 import { MetadataRoute } from "next";
 import { neon } from "@neondatabase/serverless";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sql = neon(process.env.DATABASE_URL!);
+export const revalidate = 86400;
 
-  const categories = await sql`SELECT slug FROM categories ORDER BY name`;
-  const professionals = await sql`SELECT slug, updated_at FROM professionals WHERE is_active = true ORDER BY updated_at DESC LIMIT 5000`;
-  let blogPosts: { slug: string; updated_at: string }[] = [];
+type Row = Record<string, unknown>;
+
+async function safeQuery<T = Row>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fn: () => Promise<any>,
+  label: string
+): Promise<T[]> {
   try {
-    blogPosts = await sql`SELECT slug, updated_at FROM blog_posts WHERE published = true ORDER BY published_at DESC` as { slug: string; updated_at: string }[];
-  } catch {
-    // Table may not exist yet
+    return (await fn()) as T[];
+  } catch (err) {
+    console.error(`[sitemap] ${label} failed`, err);
+    return [];
   }
+}
 
-  // Get all city+category combinations for landing pages
-  const cityCombos = await sql`
-    SELECT DISTINCT c.slug as cat_slug, p.city, p.state
-    FROM professionals p
-    JOIN categories c ON p.category_id = c.id
-    WHERE p.is_active = true AND p.city IS NOT NULL
-    ORDER BY c.slug, p.city
-  `;
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const dbUrl = process.env.DATABASE_URL;
+  const sql = dbUrl ? neon(dbUrl) : null;
+  const noop = async () => [];
 
-  const base = "https://chamei.app";
+  const categories = await safeQuery<{ slug: string }>(
+    () => (sql ? sql`SELECT slug FROM categories ORDER BY name` : noop()),
+    "categories"
+  );
+  const professionals = await safeQuery<{ slug: string; updated_at: string }>(
+    () =>
+      sql
+        ? sql`SELECT slug, updated_at FROM professionals WHERE is_active = true ORDER BY updated_at DESC LIMIT 5000`
+        : noop(),
+    "professionals"
+  );
+  const blogPosts = await safeQuery<{ slug: string; updated_at: string }>(
+    () =>
+      sql
+        ? sql`SELECT slug, updated_at FROM blog_posts WHERE published = true ORDER BY published_at DESC`
+        : noop(),
+    "blog_posts"
+  );
+
+  const cityCombos = await safeQuery<{ cat_slug: string; city: string; state: string | null }>(
+    () =>
+      sql
+        ? sql`
+            SELECT DISTINCT c.slug as cat_slug, p.city, p.state
+            FROM professionals p
+            JOIN categories c ON p.category_id = c.id
+            WHERE p.is_active = true AND p.city IS NOT NULL
+            ORDER BY c.slug, p.city
+          `
+        : noop(),
+    "city_combos"
+  );
+
+  const base = "https://delas.club";
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     { url: `${base}/para-profissionais`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${base}/eletricista-sp`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/buscar`, lastModified: new Date(), changeFrequency: "daily", priority: 0.7 },
   ];
 
@@ -38,7 +71,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // City + Category landing pages (highest SEO value)
   const citySlugify = (city: string, state: string | null) => {
     const slug = city.toLowerCase().replace(/\s+/g, "-")
       .replace(/[àáâãä]/g, "a").replace(/[èéêë]/g, "e")

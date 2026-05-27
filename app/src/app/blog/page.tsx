@@ -35,13 +35,13 @@ const categoryLabels: Record<string, string> = {
   cilios: "Cílios",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function BlogPage() {
-  const sql = getDb();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let posts: Record<string, any>[] = [];
   try {
+    const sql = getDb();
     posts = await sql`
       SELECT id, title, slug, excerpt, cover_image_url, category_slug, published_at
       FROM blog_posts
@@ -49,7 +49,7 @@ export default async function BlogPage() {
       ORDER BY published_at DESC
     `;
   } catch {
-    // Table may not exist yet — show empty state
+    // No DB connection or table missing — show empty state
   }
 
   return (
