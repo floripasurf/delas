@@ -4,6 +4,9 @@ import { Professional } from "@/lib/types";
 import ProfessionalCard from "@/app/components/professional-card";
 import Link from "next/link";
 
+// ISR: páginas categoria×cidade são long-tail e mudam pouco; cacheia por 24h.
+export const revalidate = 86400;
+
 function formatCityName(slug: string): string {
   return slug
     .split("-")
