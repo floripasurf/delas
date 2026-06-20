@@ -5,6 +5,9 @@ import { Professional, ReviewImported } from "@/lib/types";
 import ContactSidebar from "./contact-sidebar";
 import ShareProfileButton from "./share-profile-button";
 
+// ISR: perfis mudam pouco; cacheia por 24h e regenera sob demanda.
+export const revalidate = 86400;
+
 export async function generateMetadata({
   params,
 }: {

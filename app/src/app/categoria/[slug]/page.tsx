@@ -4,6 +4,9 @@ import { getDb } from "@/lib/db";
 import { Professional } from "@/lib/types";
 import ProfessionalsList from "./professionals-list";
 
+// ISR: cacheia a página por 1h em vez de bater no banco a cada visita.
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

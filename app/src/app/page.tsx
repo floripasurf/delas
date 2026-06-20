@@ -2,7 +2,8 @@ import Link from "next/link";
 import { getDb } from "@/lib/db";
 import CityProfessionals from "./components/city-professionals";
 
-export const dynamic = "force-dynamic";
+// ISR: evita bater no banco a cada visita (preserva a cota de compute do Neon).
+export const revalidate = 3600;
 
 const CATEGORIES = {
   "Beleza": [
